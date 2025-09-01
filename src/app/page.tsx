@@ -1,12 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import HomePage from "@/components/home-page";
+import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
-  const userId = "cmf06q6kz0000p4d1y9p3t47t";
+  const clerkUserId = await currentUser().then((user) => user?.id);
+  if (!clerkUserId) {
+    return <div>Please sign in to see your movies.</div>;
+  }
   const movies = await prisma.userMovie.findMany({
     where: {
       user: {
-        id: userId,
+        clerkId: clerkUserId,
       },
     },
     select: {

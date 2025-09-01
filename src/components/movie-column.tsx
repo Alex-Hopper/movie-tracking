@@ -7,6 +7,7 @@ type ColumnProps = {
   color: string;
   status: MovieStatus;
   movies: Movie[];
+  onStatusChange: (movieId: string, newStatus: MovieStatus) => void;
 };
 
 // needs to match enum MovieStatus defined in prisma schema.
@@ -17,7 +18,12 @@ const statusMappingToText = {
   WATCHED: "Watched",
 };
 
-export default function MovieColumn({ color, status, movies }: ColumnProps) {
+export default function MovieColumn({
+  color,
+  status,
+  movies,
+  onStatusChange,
+}: ColumnProps) {
   // color loading, needed otherwise cant pass dynamic "color" prop to column, that is, tailwidn will not create the class
   const loadDynamicColors = (
     <div>
@@ -27,6 +33,8 @@ export default function MovieColumn({ color, status, movies }: ColumnProps) {
       <div className="h-0 w-0 bg-green-500 bg-green-500/10"></div>
     </div>
   );
+
+  console.log(movies);
 
   return (
     <div className="w-full">
@@ -40,7 +48,12 @@ export default function MovieColumn({ color, status, movies }: ColumnProps) {
       {/* TODO: make this scrollable area. */}
       <div className={`bg-${color}-500/10 min-h-16 space-y-4 rounded-lg p-4`}>
         {movies.map((movie) => (
-          <MovieCard key={movie.id} status={status} movie={movie} />
+          <MovieCard
+            key={movie.id}
+            status={status}
+            movie={movie}
+            onStatusChange={onStatusChange}
+          />
         ))}
       </div>
     </div>

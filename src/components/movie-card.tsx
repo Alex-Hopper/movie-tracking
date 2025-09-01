@@ -11,19 +11,23 @@ const statusMappingToText = {
 };
 
 const statusMappingToColor = {
-  TO_WATCH: "bg-yellow-500",
-  WATCHING: "bg-blue-500",
+  TO_WATCH: "bg-blue-500",
+  WATCHING: "bg-yellow-500",
   WAITING: "bg-purple-500",
   WATCHED: "bg-green-500",
+};
+
+type MovieCardProps = {
+  status: MovieStatus;
+  movie: Movie;
+  onStatusChange: (movieId: string, newStatus: MovieStatus) => void;
 };
 
 export default function MovieCard({
   status,
   movie,
-}: {
-  status: MovieStatus;
-  movie: Movie;
-}) {
+  onStatusChange,
+}: MovieCardProps) {
   const posterImageURL = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`;
 
   return (
@@ -53,6 +57,7 @@ export default function MovieCard({
               disabled={key === status}
               variant="outline"
               className="cursor-pointer justify-start hover:text-black"
+              onClick={() => onStatusChange(movie.id, key as MovieStatus)}
             >
               <span
                 className={`inline-block h-3 w-3 rounded-full ${

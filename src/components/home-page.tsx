@@ -4,6 +4,7 @@ import { Movie } from "@prisma/client";
 import { MovieStatus } from "@prisma/client";
 import MovieColumn from "@/components/movie-column";
 import { useState } from "react";
+import { updateUserMovieStatus } from "@/actions/actions";
 
 interface MovieItem {
   movie: Movie;
@@ -17,6 +18,24 @@ export default function HomePage({
 }) {
   const [movies, setMovies] = useState<MovieItem[]>(initialMovies);
 
+  // change status function, that uses serverAction to update DB
+  async function changeStatus(movieId: string, newStatus: MovieStatus) {
+    const oldMovies = structuredClone(movies);
+
+    setMovies((movies) =>
+      movies.map((item) =>
+        item.movie.id === movieId ? { ...item, status: newStatus } : item,
+      ),
+    );
+
+    try {
+      await updateUserMovieStatus(movieId, newStatus);
+    } catch (error) {
+      // revert optimistic update
+      setMovies(oldMovies);
+    }
+  }
+
   return (
     <div className="m-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
       <MovieColumn
@@ -25,6 +44,7 @@ export default function HomePage({
         movies={movies
           .filter((item) => item.status === MovieStatus.TO_WATCH)
           .map((item) => item.movie)}
+        onStatusChange={changeStatus}
       />
       <MovieColumn
         color="yellow"
@@ -32,6 +52,7 @@ export default function HomePage({
         movies={movies
           .filter((item) => item.status === MovieStatus.WATCHING)
           .map((item) => item.movie)}
+        onStatusChange={changeStatus}
       />
       <MovieColumn
         color="purple"
@@ -39,6 +60,7 @@ export default function HomePage({
         movies={movies
           .filter((item) => item.status === MovieStatus.WAITING)
           .map((item) => item.movie)}
+        onStatusChange={changeStatus}
       />
       <MovieColumn
         color="green"
@@ -46,6 +68,7 @@ export default function HomePage({
         movies={movies
           .filter((item) => item.status === MovieStatus.WATCHED)
           .map((item) => item.movie)}
+        onStatusChange={changeStatus}
       />
     </div>
   );
