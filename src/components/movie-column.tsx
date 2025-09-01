@@ -1,11 +1,11 @@
 "use client";
 
-import { Movie } from "@prisma/client";
+import { Movie, MovieStatus } from "@prisma/client";
 import MovieCard from "./movie-card";
 
 type ColumnProps = {
   color: string;
-  status: string;
+  status: MovieStatus;
   movies: Movie[];
 };
 
@@ -40,7 +40,7 @@ export default function MovieColumn({ color, status, movies }: ColumnProps) {
       {/* TODO: make this scrollable area. */}
       <div className={`bg-${color}-500/10 min-h-16 space-y-4 rounded-lg p-4`}>
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard key={movie.id} status={status} movie={movie} />
         ))}
       </div>
     </div>
