@@ -21,7 +21,6 @@ export async function updateUserMovieStatus(
   if (!prismaUserId) {
     throw new Error("User not found in database");
   }
-  console.log(user.id, prismaUserId, movieId);
 
   await prisma.userMovie.update({
     where: {

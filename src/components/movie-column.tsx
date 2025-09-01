@@ -34,8 +34,6 @@ export default function MovieColumn({
     </div>
   );
 
-  console.log(movies);
-
   return (
     <div className="w-full">
       {loadDynamicColors}
