@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id            String   @id @default(cuid())
+  apiId         Int      @unique
+  title         String
+  overview      String?
+  poster_path   String?
+  backdrop_path String?
+  release_date  String?
+  vote_average  Float?
+  vote_count    Int?
+  popularity    Float?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  users  UserMovie[]
+  genres Genre[]
+}
+
+model Genre {
+  id    String  @id @default(cuid())
+  apiId Int     @unique
+  name  String?
+
+  movies Movie[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movies UserMovie[]
+}
+
+model UserMovie {
+  userId    String
+  movieId   String
+  status    MovieStatus
+  rating    Int?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@id([userId, movieId])
+}
+
+enum MovieStatus {
+  TO_WATCH
+  WATCHING
+  WAITING
+  WATCHED
+}
