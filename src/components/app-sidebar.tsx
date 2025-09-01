@@ -1,5 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
- 
+import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
@@ -9,8 +9,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
- 
+} from "@/components/ui/sidebar";
+import { SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+
 // Menu items.
 const items = [
   {
@@ -38,8 +39,8 @@ const items = [
     url: "#",
     icon: Settings,
   },
-]
- 
+];
+
 export function AppSidebar() {
   return (
     <Sidebar>
@@ -61,7 +62,11 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <UserButton showName />
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
