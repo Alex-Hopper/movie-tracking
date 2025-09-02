@@ -31,7 +31,7 @@ export default function MovieCard({
   const posterImageURL = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`;
 
   return (
-    <Tooltip>
+    <Tooltip delayDuration={200}>
       <TooltipTrigger asChild>
         <div
           className="relative min-h-16 w-full overflow-hidden rounded-md shadow-md"
