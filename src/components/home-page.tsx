@@ -18,15 +18,19 @@ export default function HomePage({
 }) {
   const [movies, setMovies] = useState<MovieItem[]>(initialMovies);
 
-  // change status function, that uses serverAction to update DB
   async function changeStatus(movieId: string, newStatus: MovieStatus) {
     const oldMovies = structuredClone(movies);
 
-    setMovies((movies) =>
-      movies.map((item) =>
-        item.movie.id === movieId ? { ...item, status: newStatus } : item,
-      ),
+    // we're removing and adding to start so that it gets placed on top of new column.
+    const moviesWithSelectedRemoved = movies.filter(
+      (item) => item.movie.id !== movieId,
     );
+    const selectedMovie = movies.find((item) => item.movie.id === movieId);
+    if (!selectedMovie) return;
+    setMovies([
+      { movie: selectedMovie.movie, status: newStatus },
+      ...moviesWithSelectedRemoved,
+    ]);
 
     try {
       await updateUserMovieStatus(movieId, newStatus);

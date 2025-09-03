@@ -17,6 +17,9 @@ export default async function Home() {
       status: true,
       movie: true,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   return <HomePage initialMovies={movies} />;
