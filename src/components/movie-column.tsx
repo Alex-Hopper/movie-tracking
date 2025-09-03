@@ -8,6 +8,7 @@ type ColumnProps = {
   status: MovieStatus;
   movies: Movie[];
   onStatusChange: (movieId: string, newStatus: MovieStatus) => void;
+  onRemove: (movieId: string) => void;
 };
 
 // needs to match enum MovieStatus defined in prisma schema.
@@ -23,6 +24,7 @@ export default function MovieColumn({
   status,
   movies,
   onStatusChange,
+  onRemove,
 }: ColumnProps) {
   // color loading, needed otherwise cant pass dynamic "color" prop to column, that is, tailwidn will not create the class
   const loadDynamicColors = (
@@ -51,6 +53,7 @@ export default function MovieColumn({
             status={status}
             movie={movie}
             onStatusChange={onStatusChange}
+            onRemove={onRemove}
           />
         ))}
       </div>

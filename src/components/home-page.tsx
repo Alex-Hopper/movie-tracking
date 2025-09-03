@@ -4,7 +4,7 @@ import { Movie } from "@prisma/client";
 import { MovieStatus } from "@prisma/client";
 import MovieColumn from "@/components/movie-column";
 import { useState } from "react";
-import { updateUserMovieStatus } from "@/actions/actions";
+import { updateUserMovieStatus, deleteUserMovie } from "@/actions/actions";
 import { toast } from "sonner";
 
 interface MovieItem {
@@ -42,6 +42,23 @@ export default function HomePage({
     }
   }
 
+  async function removeMovie(movieId: string) {
+    const oldMovies = structuredClone(movies);
+    const movieToDelete = movies.find((item) => item.movie.id === movieId);
+    const moviesWithSelectedRemoved = movies.filter(
+      (item) => item.movie.id !== movieId,
+    );
+    setMovies(moviesWithSelectedRemoved);
+
+    try {
+      await deleteUserMovie(movieId);
+      toast.success(`Removed ${movieToDelete?.movie.title} from your list.`);
+    } catch (error) {
+      toast.error("Failed to remove movie. Please try again.");
+      setMovies(oldMovies);
+    }
+  }
+
   return (
     <div className="m-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
       <MovieColumn
@@ -51,6 +68,7 @@ export default function HomePage({
           .filter((item) => item.status === MovieStatus.TO_WATCH)
           .map((item) => item.movie)}
         onStatusChange={changeStatus}
+        onRemove={removeMovie}
       />
       <MovieColumn
         color="yellow"
@@ -59,6 +77,7 @@ export default function HomePage({
           .filter((item) => item.status === MovieStatus.WATCHING)
           .map((item) => item.movie)}
         onStatusChange={changeStatus}
+        onRemove={removeMovie}
       />
       <MovieColumn
         color="purple"
@@ -67,6 +86,7 @@ export default function HomePage({
           .filter((item) => item.status === MovieStatus.WAITING)
           .map((item) => item.movie)}
         onStatusChange={changeStatus}
+        onRemove={removeMovie}
       />
       <MovieColumn
         color="green"
@@ -75,6 +95,7 @@ export default function HomePage({
           .filter((item) => item.status === MovieStatus.WATCHED)
           .map((item) => item.movie)}
         onStatusChange={changeStatus}
+        onRemove={removeMovie}
       />
     </div>
   );

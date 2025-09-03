@@ -21,12 +21,14 @@ type MovieCardProps = {
   status: MovieStatus;
   movie: Movie;
   onStatusChange: (movieId: string, newStatus: MovieStatus) => void;
+  onRemove: (movieId: string) => void;
 };
 
 export default function MovieCard({
   status,
   movie,
   onStatusChange,
+  onRemove,
 }: MovieCardProps) {
   const posterImageURL = `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`;
 
@@ -34,7 +36,7 @@ export default function MovieCard({
     <Tooltip delayDuration={150}>
       <TooltipTrigger asChild>
         <div
-          className="relative min-h-16 w-full overflow-hidden rounded-md shadow-md"
+          className="group relative min-h-16 w-full overflow-hidden rounded-md shadow-md"
           style={{
             backgroundImage: `url(${posterImageURL})`,
             backgroundSize: "cover",
@@ -43,10 +45,18 @@ export default function MovieCard({
         >
           {/* gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-
           <div className="text-md absolute right-2 bottom-2 left-2 font-semibold text-white">
             {movie.title}
           </div>
+
+          {/* remove button */}
+          <Button
+            className="absolute top-3 right-3 min-h-0 opacity-0 group-hover:opacity-100 hover:cursor-pointer"
+            variant="outline"
+            onClick={() => onRemove(movie.id)}
+          >
+            Remove
+          </Button>
         </div>
       </TooltipTrigger>
       <TooltipContent>
