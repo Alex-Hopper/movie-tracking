@@ -5,6 +5,7 @@ import { MovieStatus } from "@prisma/client";
 import MovieColumn from "@/components/movie-column";
 import { useState } from "react";
 import { updateUserMovieStatus } from "@/actions/actions";
+import { toast } from "sonner";
 
 interface MovieItem {
   movie: Movie;
@@ -35,6 +36,7 @@ export default function HomePage({
     try {
       await updateUserMovieStatus(movieId, newStatus);
     } catch (error) {
+      toast.error("Failed to update movie status. Please try again.");
       // revert optimistic update
       setMovies(oldMovies);
     }
