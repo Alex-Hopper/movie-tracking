@@ -6,6 +6,8 @@ import MovieColumn from "@/components/movie-column";
 import { useState } from "react";
 import { updateUserMovieStatus, deleteUserMovie } from "@/actions/actions";
 import { toast } from "sonner";
+import { SignedOut } from "@clerk/nextjs";
+import SignedOutBanner from "./signed-out-banner";
 
 interface MovieItem {
   movie: Movie;
@@ -60,43 +62,49 @@ export default function HomePage({
   }
 
   return (
-    <div className="m-4 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-      <MovieColumn
-        color="blue"
-        status={MovieStatus.TO_WATCH}
-        movies={movies
-          .filter((item) => item.status === MovieStatus.TO_WATCH)
-          .map((item) => item.movie)}
-        onStatusChange={changeStatus}
-        onRemove={removeMovie}
-      />
-      <MovieColumn
-        color="yellow"
-        status={MovieStatus.WATCHING}
-        movies={movies
-          .filter((item) => item.status === MovieStatus.WATCHING)
-          .map((item) => item.movie)}
-        onStatusChange={changeStatus}
-        onRemove={removeMovie}
-      />
-      <MovieColumn
-        color="purple"
-        status={MovieStatus.WAITING}
-        movies={movies
-          .filter((item) => item.status === MovieStatus.WAITING)
-          .map((item) => item.movie)}
-        onStatusChange={changeStatus}
-        onRemove={removeMovie}
-      />
-      <MovieColumn
-        color="green"
-        status={MovieStatus.WATCHED}
-        movies={movies
-          .filter((item) => item.status === MovieStatus.WATCHED)
-          .map((item) => item.movie)}
-        onStatusChange={changeStatus}
-        onRemove={removeMovie}
-      />
+    <div className="m-4 w-full space-y-4">
+      {/* TODO: uncomment SignedOut when set up. */}
+      {/* <SignedOut> */}
+      <SignedOutBanner />
+      {/* </SignedOut> */}
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+        <MovieColumn
+          color="blue"
+          status={MovieStatus.TO_WATCH}
+          movies={movies
+            .filter((item) => item.status === MovieStatus.TO_WATCH)
+            .map((item) => item.movie)}
+          onStatusChange={changeStatus}
+          onRemove={removeMovie}
+        />
+        <MovieColumn
+          color="yellow"
+          status={MovieStatus.WATCHING}
+          movies={movies
+            .filter((item) => item.status === MovieStatus.WATCHING)
+            .map((item) => item.movie)}
+          onStatusChange={changeStatus}
+          onRemove={removeMovie}
+        />
+        <MovieColumn
+          color="purple"
+          status={MovieStatus.WAITING}
+          movies={movies
+            .filter((item) => item.status === MovieStatus.WAITING)
+            .map((item) => item.movie)}
+          onStatusChange={changeStatus}
+          onRemove={removeMovie}
+        />
+        <MovieColumn
+          color="green"
+          status={MovieStatus.WATCHED}
+          movies={movies
+            .filter((item) => item.status === MovieStatus.WATCHED)
+            .map((item) => item.movie)}
+          onStatusChange={changeStatus}
+          onRemove={removeMovie}
+        />
+      </div>
     </div>
   );
 }
