@@ -45,7 +45,7 @@ export default function MovieCard({
         >
           {/* gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-          <div className="text-md absolute right-2 bottom-2 left-2 font-semibold text-white">
+          <div className="absolute right-2 bottom-2 left-2 text-lg font-semibold text-white">
             {movie.title}
           </div>
 
