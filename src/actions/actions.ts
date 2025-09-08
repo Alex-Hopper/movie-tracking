@@ -60,3 +60,30 @@ export async function deleteUserMovie(movieId: string) {
     },
   });
 }
+
+// search
+export async function searchMovies(query: string) {
+  const apiKey = process.env.TMDB_API_KEY;
+  if (!apiKey) {
+    throw new Error("TMDB API key not configured");
+  }
+
+  const url = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+    query,
+  )}&language=en-US&page=1&include_adult=true`;
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+  };
+
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    throw new Error("Failed to fetch movies from TMDB");
+  }
+
+  const data = await response.json();
+  return data.results.slice(0, 5);
+}
