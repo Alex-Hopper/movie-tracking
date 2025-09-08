@@ -36,7 +36,7 @@ export default function MovieCard({
     <Tooltip delayDuration={150}>
       <TooltipTrigger asChild>
         <div
-          className="group relative min-h-16 w-full overflow-hidden rounded-md shadow-md"
+          className="group relative min-h-16 w-full overflow-hidden rounded-md shadow-md select-none"
           style={{
             backgroundImage: `url(${posterImageURL})`,
             backgroundSize: "cover",
