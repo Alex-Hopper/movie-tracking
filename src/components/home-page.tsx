@@ -8,11 +8,7 @@ import { updateUserMovieStatus, deleteUserMovie } from "@/actions/actions";
 import { toast } from "sonner";
 import { SignedOut } from "@clerk/nextjs";
 import SignedOutBanner from "./signed-out-banner";
-
-interface MovieItem {
-  movie: Movie;
-  status: MovieStatus;
-}
+import { MovieItem } from "@/types/movie";
 
 export default function HomePage({
   initialMovies,
