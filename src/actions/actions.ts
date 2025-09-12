@@ -1,4 +1,5 @@
 "use server";
+
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { MovieStatus } from "@prisma/client";
@@ -61,7 +62,7 @@ export async function deleteUserMovie(movieId: string) {
   });
 }
 
-// search
+// search, returns the top 5 list of movies/tv shows by given query.
 export async function searchMovies(query: string) {
   const apiKey = process.env.TMDB_API_KEY;
   if (!apiKey) {
