@@ -5,30 +5,29 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { searchMovies } from "@/actions/actions";
 import SearchResults from "./search-results";
 import { Search } from "lucide-react";
-// toast
 import { toast } from "sonner";
 
 export default function MovieSearch() {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<[] | null>(null);
 
   useEffect(() => {
     if (!debouncedQuery) {
-      setResults([]);
+      setResults(null);
       return;
     }
 
     async function fetchResults() {
-      const res = await searchMovies(debouncedQuery);
-      setResults(res);
+      try {
+        const res = await searchMovies(debouncedQuery);
+        setResults(res);
+      } catch (error) {
+        toast.error("Failed to fetch search results. Please try again.");
+      }
     }
 
-    try {
-      fetchResults();
-    } catch (error) {
-      toast.error("Failed to fetch search results. Please try again. " + error);
-    }
+    fetchResults();
   }, [debouncedQuery]);
 
   return (
@@ -37,12 +36,17 @@ export default function MovieSearch() {
         <input
           type="text"
           placeholder="Search"
-          className={`h-12 w-full rounded-t-md pl-10 focus:outline-none ${results.length > 0 ? "border-b-1 border-neutral-700" : ""}`}
+          className={`h-12 w-full rounded-t-md pl-10 focus:outline-none ${results ? "border-b-1 border-neutral-700" : ""}`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <Search className="text-muted-foreground absolute left-3 h-4 w-4" />
       </div>
+      {results?.length == 0 && debouncedQuery.length > 0 && (
+        <p className="p-2 text-center text-sm text-neutral-400">
+          No results found.
+        </p>
+      )}
       <SearchResults results={results} />
     </div>
   );
