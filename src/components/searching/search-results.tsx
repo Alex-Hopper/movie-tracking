@@ -2,7 +2,7 @@ import { MovieSearchResult } from "@/types/movie";
 import SearchResultCard from "./search-result-card";
 
 type SearchResultsProps = {
-  results: MovieSearchResult[] | null;
+  results: MovieSearchResult[] | undefined;
 };
 
 export default function SearchResults({ results }: SearchResultsProps) {

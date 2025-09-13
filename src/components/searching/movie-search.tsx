@@ -6,29 +6,29 @@ import { searchMovies } from "@/actions/actions";
 import SearchResults from "./search-results";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 export default function MovieSearch() {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
-  const [results, setResults] = useState<[] | null>(null);
+
+  const {
+    isLoading,
+    data: results,
+    error,
+  } = useQuery({
+    queryKey: ["search-movies", debouncedQuery],
+    queryFn: () => searchMovies(debouncedQuery),
+    enabled: debouncedQuery.length > 0,
+    staleTime: 1000 * 60 * 10, // cache for 10 minutes
+    retry: false,
+  });
 
   useEffect(() => {
-    if (!debouncedQuery) {
-      setResults(null);
-      return;
+    if (error) {
+      toast.error("Failed to fetch search results. Please try again.");
     }
-
-    async function fetchResults() {
-      try {
-        const res = await searchMovies(debouncedQuery);
-        setResults(res);
-      } catch (error) {
-        toast.error("Failed to fetch search results. Please try again.");
-      }
-    }
-
-    fetchResults();
-  }, [debouncedQuery]);
+  }, [error]);
 
   return (
     <div className="relative w-full rounded-md bg-neutral-800">
@@ -42,7 +42,7 @@ export default function MovieSearch() {
         />
         <Search className="text-muted-foreground absolute left-3 h-4 w-4" />
       </div>
-      {results?.length == 0 && debouncedQuery.length > 0 && (
+      {!isLoading && results?.length == 0 && (
         <p className="p-2 text-center text-sm text-neutral-400">
           No results found.
         </p>
