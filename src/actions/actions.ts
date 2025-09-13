@@ -64,6 +64,10 @@ export async function deleteUserMovie(movieId: string) {
 
 // search, returns the top 5 list of movies/tv shows by given query.
 export async function searchMovies(query: string) {
+  if (!query || query.trim() === "") {
+    return [];
+  }
+
   const apiKey = process.env.TMDB_API_KEY;
   if (!apiKey) {
     throw new Error("TMDB API key not configured");
