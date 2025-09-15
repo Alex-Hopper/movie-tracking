@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
-import { searchMovies } from "@/actions/actions";
+import { searchMovies } from "@/actions/searching";
 import SearchResults from "./search-results";
 import { Search } from "lucide-react";
 import { toast } from "sonner";

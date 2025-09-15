@@ -5,11 +5,4 @@ export type MovieItem = {
   status: MovieStatus;
 };
 
-export type MovieSearchResult = {
-  apiId: number;
-  title: string | null;
-  name: string | null;
-  overview: string | null;
-  backdrop_path: string | null;
-  poster_path: string | null;
-};
+export type MoviePreDB = Omit<Movie, "id" | "created_at" | "updated_at">;
