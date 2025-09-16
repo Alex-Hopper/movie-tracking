@@ -1,8 +1,8 @@
-import { MovieSearchResult } from "@/types/movie";
+import { MoviePreDB } from "@/types/movie";
 import SearchResultCard from "./search-result-card";
 
 type SearchResultsProps = {
-  results: MovieSearchResult[] | undefined;
+  results: MoviePreDB[] | undefined;
 };
 
 export default function SearchResults({ results }: SearchResultsProps) {
