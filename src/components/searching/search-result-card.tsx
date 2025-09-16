@@ -1,8 +1,8 @@
+import { MoviePreDB } from "@/types/movie";
 import { Button } from "../ui/button";
-import { MovieSearchResult } from "@/types/movie";
 
 type SearchResultCardProps = {
-  movie: MovieSearchResult;
+  movie: MoviePreDB;
 };
 
 // TODO: connect add button to store.
@@ -25,7 +25,7 @@ export default function SearchResultCard({ movie }: SearchResultCardProps) {
 
         <div className="relative px-4 py-2">
           <div className="line-clamp-2 max-h-16 text-lg font-semibold text-white transition-all duration-500 select-none group-hover/card:line-clamp-none group-hover/card:max-h-64">
-            {movie.title ?? movie.name}
+            {movie.title}
           </div>
         </div>
       </div>
