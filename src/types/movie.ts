@@ -1,7 +1,7 @@
 import { Movie, MovieStatus } from "@prisma/client";
 
 export type MovieItem = {
-  movie: Movie;
+  movie: MoviePreDB;
   status: MovieStatus;
 };
 
