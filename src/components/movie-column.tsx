@@ -1,14 +1,15 @@
 "use client";
 
-import { Movie, MovieStatus } from "@prisma/client";
+import { MovieStatus } from "@prisma/client";
 import MovieCard from "./movie-card";
+import { MoviePreDB } from "@/types/movie";
 
 type ColumnProps = {
   color: string;
   status: MovieStatus;
-  movies: Movie[];
-  onStatusChange: (movieId: string, newStatus: MovieStatus) => void;
-  onRemove: (movieId: string) => void;
+  movies: MoviePreDB[];
+  onStatusChange: (movieApiId: number, newStatus: MovieStatus) => void;
+  onRemove: (movieApiId: number) => void;
 };
 
 // needs to match enum MovieStatus defined in prisma schema.
@@ -49,7 +50,7 @@ export default function MovieColumn({
       <div className={`bg-${color}-500/10 min-h-16 space-y-4 rounded-lg p-4`}>
         {movies.map((movie) => (
           <MovieCard
-            key={movie.id}
+            key={movie.apiId}
             status={status}
             movie={movie}
             onStatusChange={onStatusChange}

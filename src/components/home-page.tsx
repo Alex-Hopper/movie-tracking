@@ -17,14 +17,16 @@ export default function HomePage({
 }) {
   const [movies, setMovies] = useState<MovieItem[]>(initialMovies);
 
-  async function changeStatus(movieId: string, newStatus: MovieStatus) {
+  async function changeStatus(movieApiId: number, newStatus: MovieStatus) {
     const oldMovies = structuredClone(movies);
 
     // we're removing and adding to start so that it gets placed on top of new column.
     const moviesWithSelectedRemoved = movies.filter(
-      (item) => item.movie.id !== movieId,
+      (item) => item.movie.apiId !== movieApiId,
     );
-    const selectedMovie = movies.find((item) => item.movie.id === movieId);
+    const selectedMovie = movies.find(
+      (item) => item.movie.apiId === movieApiId,
+    );
     if (!selectedMovie) return;
     setMovies([
       { movie: selectedMovie.movie, status: newStatus },
@@ -32,7 +34,7 @@ export default function HomePage({
     ]);
 
     try {
-      await updateUserMovieStatus(movieId, newStatus);
+      await updateUserMovieStatus(movieApiId, newStatus);
     } catch (error) {
       toast.error("Failed to update movie status. Please try again.");
       // revert optimistic update
@@ -40,16 +42,18 @@ export default function HomePage({
     }
   }
 
-  async function removeMovie(movieId: string) {
+  async function removeMovie(movieApiId: number) {
     const oldMovies = structuredClone(movies);
-    const movieToDelete = movies.find((item) => item.movie.id === movieId);
+    const movieToDelete = movies.find(
+      (item) => item.movie.apiId === movieApiId,
+    );
     const moviesWithSelectedRemoved = movies.filter(
-      (item) => item.movie.id !== movieId,
+      (item) => item.movie.apiId !== movieApiId,
     );
     setMovies(moviesWithSelectedRemoved);
 
     try {
-      await deleteUserMovie(movieId);
+      await deleteUserMovie(movieApiId);
       toast.success(`Removed ${movieToDelete?.movie.title} from your list.`);
     } catch (error) {
       toast.error("Failed to remove movie. Please try again.");

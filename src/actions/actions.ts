@@ -1,24 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
 import { MovieStatus } from "@prisma/client";
+import { getUserId, getMovieIDFromApiId } from "./utils/utils";
 
-export async function addUserMovie(movieId: string, status: MovieStatus) {
-  const user = await currentUser();
-  if (!user) {
-    throw new Error("Not authenticated");
-  }
-  const prismaUserId = await prisma.user
-    .findUnique({
-      where: { clerkId: user.id },
-      select: { id: true },
-    })
-    .then((user) => user?.id);
+export async function addUserMovie(movieApiId: number, status: MovieStatus) {
+  const prismaUserId = await getUserId();
 
-  if (!prismaUserId) {
-    throw new Error("User not found in database");
-  }
+  const movieId = await getMovieIDFromApiId(movieApiId);
 
   await prisma.userMovie.upsert({
     where: {
@@ -38,21 +27,10 @@ export async function addUserMovie(movieId: string, status: MovieStatus) {
   });
 }
 
-export async function deleteUserMovie(movieId: string) {
-  const user = await currentUser();
-  if (!user) {
-    throw new Error("Not authenticated");
-  }
-  const prismaUserId = await prisma.user
-    .findUnique({
-      where: { clerkId: user.id },
-      select: { id: true },
-    })
-    .then((user) => user?.id);
+export async function deleteUserMovie(movieApiId: number) {
+  const prismaUserId = await getUserId();
 
-  if (!prismaUserId) {
-    throw new Error("User not found in database");
-  }
+  const movieId = await getMovieIDFromApiId(movieApiId);
 
   await prisma.userMovie.delete({
     where: {
@@ -65,23 +43,12 @@ export async function deleteUserMovie(movieId: string) {
 }
 
 export async function updateUserMovieStatus(
-  movieId: string,
+  movieApiId: number,
   newMovieStatus: MovieStatus,
 ) {
-  const user = await currentUser();
-  if (!user) {
-    throw new Error("Not authenticated");
-  }
-  const prismaUserId = await prisma.user
-    .findUnique({
-      where: { clerkId: user.id },
-      select: { id: true },
-    })
-    .then((user) => user?.id);
+  const prismaUserId = await getUserId();
 
-  if (!prismaUserId) {
-    throw new Error("User not found in database");
-  }
+  const movieId = await getMovieIDFromApiId(movieApiId);
 
   await prisma.userMovie.update({
     where: {

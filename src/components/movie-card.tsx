@@ -1,6 +1,7 @@
-import { Movie, MovieStatus } from "@prisma/client";
+import { MovieStatus } from "@prisma/client";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import { Button } from "./ui/button";
+import { MoviePreDB } from "@/types/movie";
 
 // needs to match enum MovieStatus defined in prisma schema.
 const statusMappingToText = {
@@ -19,9 +20,9 @@ const statusMappingToColor = {
 
 type MovieCardProps = {
   status: MovieStatus;
-  movie: Movie;
-  onStatusChange: (movieId: string, newStatus: MovieStatus) => void;
-  onRemove: (movieId: string) => void;
+  movie: MoviePreDB;
+  onStatusChange: (movieApiId: number, newStatus: MovieStatus) => void;
+  onRemove: (movieApiId: number) => void;
 };
 
 export default function MovieCard({
@@ -53,7 +54,7 @@ export default function MovieCard({
           <Button
             className="absolute top-3 right-3 min-h-0 opacity-0 group-hover:opacity-100 hover:cursor-pointer"
             variant="outline"
-            onClick={() => onRemove(movie.id)}
+            onClick={() => onRemove(movie.apiId)}
           >
             Remove
           </Button>
@@ -67,7 +68,7 @@ export default function MovieCard({
               disabled={key === status}
               variant="outline"
               className="cursor-pointer justify-start hover:text-black"
-              onClick={() => onStatusChange(movie.id, key as MovieStatus)}
+              onClick={() => onStatusChange(movie.apiId, key as MovieStatus)}
             >
               <span
                 className={`inline-block h-3 w-3 rounded-full ${
