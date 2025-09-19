@@ -3,19 +3,22 @@
 import { Movie } from "@prisma/client";
 import { MovieStatus } from "@prisma/client";
 import MovieColumn from "@/components/movie-column";
-import { useState } from "react";
 import { updateUserMovieStatus, deleteUserMovie } from "@/actions/actions";
 import { toast } from "sonner";
 import { SignedOut } from "@clerk/nextjs";
 import SignedOutBanner from "./signed-out-banner";
 import { MovieItem } from "@/types/movie";
+import { useMoviesStore } from "@/store/movies-store";
 
 export default function HomePage({
   initialMovies,
 }: {
   initialMovies: MovieItem[];
 }) {
-  const [movies, setMovies] = useState<MovieItem[]>(initialMovies);
+  const { movies, setMovies } = useMoviesStore();
+  if (movies.length === 0 && initialMovies.length > 0) {
+    setMovies(initialMovies);
+  }
 
   async function changeStatus(movieApiId: number, newStatus: MovieStatus) {
     const oldMovies = structuredClone(movies);
