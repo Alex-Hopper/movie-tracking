@@ -1,14 +1,42 @@
 import { MoviePreDB } from "@/types/movie";
 import { Button } from "../ui/button";
+import { addUserMovie } from "@/actions/actions";
+import { MovieStatus } from "@prisma/client";
+import { useMoviesStore } from "@/store/movies-store";
+import { toast } from "sonner";
+import { Check } from "lucide-react";
 
 type SearchResultCardProps = {
   movie: MoviePreDB;
 };
 
-// TODO: connect add button to store.
-
 export default function SearchResultCard({ movie }: SearchResultCardProps) {
+  const { movies, setMovies, addMovie } = useMoviesStore();
+
   const posterImageURL = `https://image.tmdb.org/t/p/w500${movie.backdrop_path ?? movie.poster_path}`;
+
+  let movieAdded = movies.some((m) => m.movie.apiId === movie.apiId);
+
+  async function handleAddMovie() {
+    const prevMovies = [...movies];
+
+    if (movieAdded) {
+      toast.error("Movie already added.");
+      return;
+    }
+
+    movieAdded = true;
+    addMovie({ movie, status: MovieStatus.TO_WATCH });
+
+    try {
+      await addUserMovie(movie.apiId, MovieStatus.TO_WATCH);
+      toast.success(`Added ${movie.title} to your to watch list.`);
+    } catch (error) {
+      movieAdded = false;
+      setMovies(prevMovies);
+      toast.error(`Failed to add ${movie.title}. Please try again.`);
+    }
+  }
 
   return (
     <div className="flex items-stretch gap-x-1">
@@ -35,8 +63,17 @@ export default function SearchResultCard({ movie }: SearchResultCardProps) {
         <Button
           className="h-full w-8 align-middle hover:cursor-pointer"
           variant="outline"
+          disabled={movieAdded}
+          onClick={handleAddMovie}
         >
-          +
+          {/* if already in add checkmark, otherwise + mark */}
+          {movieAdded ? (
+            <span className="text-green-500">
+              <Check />
+            </span>
+          ) : (
+            <span className="text-white">+</span>
+          )}
         </Button>
       </div>
     </div>
